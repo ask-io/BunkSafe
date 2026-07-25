@@ -1,0 +1,34 @@
+/*save and load student data from the browser's localStorage */
+const STORAGE_KEY = 'bunksafe_data';
+function getData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+function clearData() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+/*
+ ==========================================
+    Expected Data Schema (For Reference)
+ ==========================================
+ {
+   profile: {
+     name: "Abhijit",
+     department: "CSE",
+     semester: "S3",
+     targetPercent: 75
+   },
+   subjects: [
+     {
+       id: "subj_1",
+       name: "Data Structures",
+       code: "CST201",
+       attended: 18,
+       total: 20
+     }
+   ]
+ }
+*/
