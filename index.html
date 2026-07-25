@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport", content="width=device-width, initial-scale=1.0, msximum-scale=1.0, user-scalable=no">
+        <title>BunkSafe 🛡</title>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="css/style.css">
+
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#0f172a">
+    </head>
+    <body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+        <div id="onboarding" class="hidden min-h-screen p-6 flex flex-col justify-center max-w-md mx-auto w-full">
+            <!-- Form content will be injected or rendered here -->
+        </div>
+        <div id="app", class="hidden min-h-screen flex flex-col max-w-md mx-auto w-full p-4 relative pb=20">
+            <!-- Main interface content will live here -->
+        </div>
+        <div id="add-subject-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <!-- Modal content will live here -->
+        </div>
+        <script src="js/storage.js"></script>
+        <script src="js/calc.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
