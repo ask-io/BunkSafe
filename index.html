@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>BunkSafe 🛡</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BunkSafe</title>
 
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
 
-        <link rel="manifest" href="manifest.json">
-        <meta name="theme-color" content="#0f172a">
-    </head>
-    <body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
-        <div id="onboarding" class="hidden min-h-screen p-6 flex flex-col justify-center max-w-md mx-auto w-full">
-            <!-- Form content will be injected or rendered here -->
-        </div>
-        <div id="app" class="hidden min-h-screen flex flex-col max-w-md mx-auto w-full p-4 relative pb-20">
-            <!-- Main interface content will live here -->
-        </div>
-        <div id="add-subject-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <!-- Modal content will live here -->
-        </div>
-        <script src="js/storage.js"></script>
-        <script src="js/calc.js"></script>
-        <script src="js/ui.js"></script>
-        <script src="js/app.js"></script>
-    </body>
+<body>
+
+<div class="container">
+
+    <h1>BunkSafe 🛡️</h1>
+
+    <input id="subject" type="text" placeholder="Subject">
+
+    <input id="attended" type="number" placeholder="Classes Attended">
+
+    <input id="total" type="number" placeholder="Total Classes">
+
+    <input id="target" type="number" value="75">
+
+    <button id="calculateBtn">
+        Calculate
+    </button>
+
+    <div id="result"></div>
+
+</div>
+
+<script type="module" src="js/app.js"></script>
+
+</body>
 </html>
