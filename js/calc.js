@@ -1,65 +1,68 @@
-function currentPercent(attended, total){
+function currentPercent(attended, total) {
     if (total === 0) {
         return 0;
+    } else {
+        return (attended / total) * 100;
     }
-
-    return (attended / total) * 100;
 }
 function safeBunks(attended, total, target){
 
+     if (currentPercent(attended, total) < target) {
+        return 0;
+    }
+
     let bunks = 0;
 
-    while(currentPercent(attended, total + 1) >= target){
-
-        total++;
+    while ((attended / (total + bunks + 1)) * 100 >= target) {
         bunks++;
-
     }
 
     return bunks;
 }
-function classesNeeded(attended, total, target){
 
-    if(total === 0){
+function classesNeeded(attended, total, target) {
+    if (currentPercent(attended, total) >= target) {
         return 0;
     }
 
-    let needed = 0;
+    let extra = 0;
 
-    while(currentPercent(attended, total) < target){
-
-        attended++;
-        total++;
-        needed++;
-
+    while (((attended + extra) / (total + extra)) * 100 < target) {
+        extra++;
     }
 
-    return needed;
+    return extra;
 }
-function getStatus(attended, total, target){
 
+function getStatus(attended, total, target) {
     let percent = currentPercent(attended, total);
 
-    if(total === 0){
-        return "No classes conducted yet";
+    if (total === 0) {
+        return {
+            status: "No Classes",
+            percentage: 0,
+            message: "No classes conducted yet"
+        };
     }
 
-    if(percent >= target){
-
+    if (percent >= target) {
         return {
             status: "Safe",
             percentage: percent,
             bunkAvailable: safeBunks(attended, total, target)
         };
-
     }
-    else{
 
-        return {
-            status: "Danger",
-            percentage: percent,
-            classesRequired: classesNeeded(attended, total, target)
-        };
-
-    }
+    return {
+        status: "Danger",
+        percentage: percent,
+        classesRequired: classesNeeded(attended, total, target)
+    };
 }
+
+export {
+    currentPercent,
+    classesNeeded,
+    safeBunks,
+    getStatus
+};
