@@ -42,3 +42,13 @@ function clearData() {
    ]
  }
 */
+const STORAGE_KEY = "bunksafe_data";
+
+export function loadSubjects() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+export function saveSubjects(subjects) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(subjects));
+}

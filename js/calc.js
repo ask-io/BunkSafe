@@ -1,68 +1,41 @@
-function currentPercent(attended, total) {
-    if (total === 0) {
-        return 0;
-    } else {
-        return (attended / total) * 100;
-    }
-}
-function safeBunks(attended, total, target){
+// Attendance math for BunkSafe.
+// Percentages are handled as plain numbers (75, not 0.75) to match the UI inputs.
 
-     if (currentPercent(attended, total) < target) {
-        return 0;
-    }
-
-    let bunks = 0;
-
-    while ((attended / (total + bunks + 1)) * 100 >= target) {
-        bunks++;
-    }
-
-    return bunks;
+export function currentPercent(attended, total) {
+    if (!total || total <= 0) return 0;
+    return (attended / total) * 100;
 }
 
-function classesNeeded(attended, total, target) {
-    if (currentPercent(attended, total) >= target) {
-        return 0;
-    }
+// How many classes in a row you can miss and still stay at or above target%.
+export function safeBunks(attended, total, target) {
+    if (!target || target <= 0) return 0;
+    if (currentPercent(attended, total) < target) return 0;
 
-    let extra = 0;
-
-    while (((attended + extra) / (total + extra)) * 100 < target) {
-        extra++;
-    }
-
-    return extra;
+    const safe = (attended * 100 - target * total) / target;
+    return Math.max(0, Math.floor(safe));
 }
 
-function getStatus(attended, total, target) {
-    let percent = currentPercent(attended, total);
+// How many classes in a row you need to attend to reach target%.
+export function classesNeeded(attended, total, target) {
+    if (target >= 100) return Math.max(0, total - attended);
+    if (currentPercent(attended, total) >= target) return 0;
 
-    if (total === 0) {
-        return {
-            status: "No Classes",
-            percentage: 0,
-            message: "No classes conducted yet"
-        };
-    }
+    const needed = (target * total - 100 * attended) / (100 - target);
+    return Math.max(0, Math.ceil(needed));
+}
+
+export function getStatus(attended, total, target) {
+    const percent = currentPercent(attended, total);
+    const rounded = percent.toFixed(1);
 
     if (percent >= target) {
-        return {
-            status: "Safe",
-            percentage: percent,
-            bunkAvailable: safeBunks(attended, total, target)
-        };
+        const bunks = safeBunks(attended, total, target);
+        if (bunks <= 0) {
+            return `${rounded}% — right on the edge. One more miss drops you below ${target}%.`;
+        }
+        return `${rounded}% — you can skip ${bunks} more class${bunks === 1 ? "" : "es"} and stay above ${target}%.`;
     }
 
-    return {
-        status: "Danger",
-        percentage: percent,
-        classesRequired: classesNeeded(attended, total, target)
-    };
+    const needed = classesNeeded(attended, total, target);
+    return `${rounded}% — attend the next ${needed} class${needed === 1 ? "" : "es"} in a row to hit ${target}%.`;
 }
-
-export {
-    currentPercent,
-    classesNeeded,
-    safeBunks,
-    getStatus
-};
