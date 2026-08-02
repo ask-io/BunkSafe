@@ -52,14 +52,38 @@ function renderSubjects() {
         const safe = percent >= s.target;
         const card = document.createElement("div");
         card.className = "card";
+
+        const bunked = s.total - s.attended;
+
         card.innerHTML = `
-            <div class="card-top">
-                <span class="card-name">${s.name}</span>
-                <button class="removeBtn" data-index="${i}" aria-label="Remove ${s.name}">×</button>
-            </div>
-            <div class="card-percent ${safe ? "safe" : "risk"}">${percent.toFixed(1)}%</div>
-            <div class="card-detail">${getStatus(s.attended, s.total, s.target)}</div>
-        `;
+        <div class="card-top">
+            <span class="card-name">${s.name}</span>
+            <button class="removeBtn" data-index="${i}">×</button>
+        </div>
+
+        <div class="card-percent ${safe ? "safe" : "risk"}">
+            ${percent.toFixed(1)}%
+        </div>
+
+        <div class="card-stats">
+            <span>✅ Attended: <strong>${s.attended}</strong></span>
+            <span>❌ Bunked: <strong>${bunked}</strong></span>
+            <span>📚 Total: <strong>${s.total}</strong></span>
+        </div>
+
+        <div class="card-detail">
+            ${getStatus(s.attended, s.total, s.target)}
+        </div>
+
+        <div class="card-actions">
+            <button class="attendBtn" data-index="${i}">
+                + Attended
+            </button>
+            <button class="bunkBtn" data-index="${i}">
+                − Bunked
+            </button>
+        </div>
+    `;
         listEl.appendChild(card);
     });
 
@@ -71,7 +95,33 @@ function renderSubjects() {
             renderSubjects();
         });
     });
+    
+    listEl.querySelectorAll(".attendBtn").forEach(btn =>{
+        btn.addEventListener("click", () => {
+            const subjects = loadSubjects();
+            const subject = subjects[Number(btn.dataset.index)];
+
+            subject.attended++;
+            subject.total++;
+
+            saveSubjects(subjects);
+            renderSubjects()
+        });
+    });
+
+    listEl.querySelectorAll(".bunkBtn").forEach(btn =>{
+        btn.addEventListener("click", () => {
+            const subjects = loadSubjects();
+            const subject = subjects[Number(btn.dataset.index)];
+
+            subject.total++;
+
+            saveSubjects(subjects);
+            renderSubjects()
+        });
+    });
 }
+
 
 calculateBtn.addEventListener("click", () => {
     const name = form.value.trim();
