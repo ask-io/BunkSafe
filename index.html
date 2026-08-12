@@ -8,6 +8,13 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d0d0d">
 </head>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js');
+    });
+  }
+</script>
 <body>
 
 <div id="onboarding" class="hidden">
