@@ -1,160 +1,134 @@
-import { currentPercent, safeBunks, classesNeeded, getStatus } from "./calc.js";
+let state = {
+    studentName: '',
+    subjects: [],
+};
 
-const STORAGE_KEY = "bunksafe.subjects";
-
-const form = document.getElementById("subject");
-const attendedInput = document.getElementById("attended");
-const totalInput = document.getElementById("total");
-const targetInput = document.getElementById("target");
-const calculateBtn = document.getElementById("calculateBtn");
-const resultEl = document.getElementById("result");
-const listEl = document.getElementById("subjectList");
-
-function loadSubjects() {
-    try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
-        return [];
-    }
+function persist() {
+    saveData({ profile: { name: state.studentName }, subjects: state.subjects });
 }
 
-function saveSubjects(subjects) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(subjects));
+function goToDashboard() {
+    renderDashboard(state);
 }
 
-function showResult(attended, total, target) {
-    if (!total || total <= 0) {
-        resultEl.textContent = "Total classes has to be more than zero.";
-        resultEl.className = "warn";
+function goToOnboarding() {
+    renderOnboarding();
+}
+
+function handleStart(name) {
+    state.studentName = name;
+    persist();
+    goToDashboard();
+}
+
+function handleAddSubject(subject) {
+    state.subjects.push({ ...subject, id: crypto.randomUUID() });
+    persist();
+    goToDashboard();
+}
+
+function handleMark(id, type) {
+    state.subjects = state.subjects.map(s => {
+        if (s.id !== id) return s;
+        return type === 'attend'
+            ? { ...s, attended: s.attended + 1, total: s.total + 1 }
+            : { ...s, total: s.total + 1 };
+    });
+    persist();
+    goToDashboard();
+}
+
+function handleRemove(id) {
+    state.subjects = state.subjects.filter(s => s.id !== id);
+    persist();
+    goToDashboard();
+}
+
+function submitAddSubjectForm() {
+    const name = document.getElementById('modal-name').value;
+    const attended = parseInt(document.getElementById('modal-attended').value) || 0;
+    const total = parseInt(document.getElementById('modal-total').value) || 0;
+    const targetRaw = parseInt(document.getElementById('modal-target').value) || 75;
+    const target = Math.min(100, Math.max(1, targetRaw));
+
+    if (!name.trim()) {
+        showModalError('GIVE THE SUBJECT A NAME FIRST.');
         return;
     }
-    if (attended > total) {
-        resultEl.textContent = "Attended can't be more than total.";
-        resultEl.className = "warn";
-        return;
-    }
-
-    resultEl.textContent = getStatus(attended, total, target);
-    resultEl.className = currentPercent(attended, total) >= target ? "safe" : "risk";
-}
-
-function renderSubjects() {
-    const subjects = loadSubjects();
-    listEl.innerHTML = "";
-
-    if (subjects.length === 0) {
-        listEl.innerHTML = `<p class="empty">No subjects saved yet. Add one above.</p>`;
-        return;
-    }
-
-    subjects.forEach((s, i) => {
-        const percent = currentPercent(s.attended, s.total);
-        const safe = percent >= s.target;
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const bunked = s.total - s.attended;
-
-        card.innerHTML = `
-        <div class="card-top">
-            <span class="card-name">${s.name}</span>
-            <button class="removeBtn" data-index="${i}">×</button>
-        </div>
-
-        <div class="card-percent ${safe ? "safe" : "risk"}">
-            ${percent.toFixed(1)}%
-        </div>
-
-        <div class="card-stats">
-            <span>✅ Attended: <strong>${s.attended}</strong></span>
-            <span>❌ Bunked: <strong>${bunked}</strong></span>
-            <span>📚 Total: <strong>${s.total}</strong></span>
-        </div>
-
-        <div class="card-detail">
-            ${getStatus(s.attended, s.total, s.target)}
-        </div>
-
-        <div class="card-actions">
-            <button class="attendBtn" data-index="${i}">
-                + Attended
-            </button>
-            <button class="bunkBtn" data-index="${i}">
-                − Bunked
-            </button>
-        </div>
-    `;
-        listEl.appendChild(card);
-    });
-
-    listEl.querySelectorAll(".removeBtn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const subjects = loadSubjects();
-            subjects.splice(Number(btn.dataset.index), 1);
-            saveSubjects(subjects);
-            renderSubjects();
-        });
-    });
-    
-    listEl.querySelectorAll(".attendBtn").forEach(btn =>{
-        btn.addEventListener("click", () => {
-            const subjects = loadSubjects();
-            const subject = subjects[Number(btn.dataset.index)];
-
-            subject.attended++;
-            subject.total++;
-
-            saveSubjects(subjects);
-            renderSubjects()
-        });
-    });
-
-    listEl.querySelectorAll(".bunkBtn").forEach(btn =>{
-        btn.addEventListener("click", () => {
-            const subjects = loadSubjects();
-            const subject = subjects[Number(btn.dataset.index)];
-
-            subject.total++;
-
-            saveSubjects(subjects);
-            renderSubjects()
-        });
-    });
-}
-
-
-calculateBtn.addEventListener("click", () => {
-    const name = form.value.trim();
-    const attended = Number(attendedInput.value);
-    const total = Number(totalInput.value);
-    const target = Number(targetInput.value);
-
-    if (!name) {
-        resultEl.textContent = "Give the subject a name first.";
-        resultEl.className = "warn";
+    if (total > 0 && attended > total) {
+        showModalError("ATTENDED CAN'T BE MORE THAN TOTAL.");
         return;
     }
 
-    showResult(attended, total, target);
+    closeAddSubjectModal();
+    handleAddSubject({ name: name.trim(), attended, total, target });
+}
 
-    if (total > 0 && attended <= total) {
-        const subjects = loadSubjects();
-        subjects.push({ name, attended, total, target });
-        saveSubjects(subjects);
-        renderSubjects();
+// ── Event delegation: one listener per container, since content re-renders ──
 
-        form.value = "";
-        attendedInput.value = "";
-        totalInput.value = "";
+document.addEventListener('DOMContentLoaded', () => {
+    const stored = loadData();
+
+    if (stored && stored.profile && stored.profile.name) {
+        state.studentName = stored.profile.name;
+        state.subjects = stored.subjects || [];
+        goToDashboard();
+    } else {
+        goToOnboarding();
     }
+
+    // Onboarding: name input + start button
+    document.getElementById('onboarding').addEventListener('input', (e) => {
+        if (e.target.id !== 'name-input') return;
+        const hasName = e.target.value.trim().length > 0;
+        document.getElementById('start-btn').disabled = !hasName;
+        document.getElementById('start-hint').classList.toggle('hidden', hasName);
+    });
+
+    document.getElementById('onboarding').addEventListener('keydown', (e) => {
+        if (e.target.id === 'name-input' && e.key === 'Enter' && e.target.value.trim()) {
+            handleStart(e.target.value.trim());
+        }
+    });
+
+    document.getElementById('onboarding').addEventListener('click', (e) => {
+        if (e.target.id === 'start-btn' && !e.target.disabled) {
+            const name = document.getElementById('name-input').value.trim();
+            if (name) handleStart(name);
+        }
+    });
+
+    // Dashboard: add button, mark attend/miss, remove
+    document.getElementById('app').addEventListener('click', (e) => {
+        if (e.target.id === 'add-subject-btn') {
+            openAddSubjectModal();
+            return;
+        }
+        const markBtn = e.target.closest('.mark-btn');
+        if (markBtn) {
+            handleMark(markBtn.dataset.id, markBtn.dataset.type);
+            return;
+        }
+        const removeBtn = e.target.closest('.remove-btn');
+        if (removeBtn) {
+            handleRemove(removeBtn.dataset.id);
+        }
+    });
+
+    // Modal: delegate on the modal container since it's rebuilt each open
+    document.getElementById('add-subject-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'modal-overlay' || e.target.id === 'modal-close') {
+            closeAddSubjectModal();
+            return;
+        }
+        if (e.target.id === 'modal-submit') {
+            submitAddSubjectForm();
+        }
+    });
+
+    document.getElementById('add-subject-modal').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.target.id === 'modal-name') {
+            submitAddSubjectForm();
+        }
+    });
 });
-
-renderSubjects();
-
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(() => {
-            // offline support is a nice-to-have, not worth failing loudly over
-        });
-    });
-}

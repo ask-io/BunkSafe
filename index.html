@@ -1,51 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0b1220">
-    <title>BunkSafe</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BunkSafe 🛡</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d0d0d">
 </head>
-
 <body>
 
-<div class="container">
-
-    <h1>BunkSafe 🛡️</h1>
-    <p class="tagline">Know exactly how many classes you can skip.</p>
-
-    <input id="subject" type="text" placeholder="Subject">
-
-    <input id="attended" type="number" placeholder="Classes Attended" min="0">
-
-    <input id="total" type="number" placeholder="Total Classes" min="0">
-
-    <label class="target-label" for="target">Target attendance %</label>
-    <input id="target" type="number" value="75" min="1" max="100">
-
-    <button id="calculateBtn">
-        Calculate
-    </button>
-
-    <div id="result"></div>
-
-    <h2 class="section-heading">Your subjects</h2>
-    <div id="subjectList"></div>
-
+<div id="onboarding" class="hidden">
+    <!-- renderOnboarding() fills this in -->
 </div>
 
-<script type="module" src="js/app.js"></script>
+<div id="app" class="hidden">
+    <!-- renderDashboard() fills this in -->
+</div>
 
+<div id="add-subject-modal" class="hidden">
+    <!-- openAddSubjectModal() fills this in -->
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/calc.js"></script>
+<script src="js/pixel-canvas.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
