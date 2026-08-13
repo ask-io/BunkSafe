@@ -47,6 +47,8 @@ function renderDashboard(state) {
         ? 100
         : subjects.reduce((acc, s) => acc + currentPercent(s.attended, s.total), 0) / subjects.length;
 
+    const currentYear = new Date().getFullYear();
+
     app.innerHTML = `
         <canvas id="pixel-canvas" class="pixel-canvas"></canvas>
         <div class="dashboard-wrap">
@@ -72,6 +74,7 @@ function renderDashboard(state) {
                     </div>
                 </div>` : ''}
 
+                // Inside renderDashboard(state)
                 <div class="subjects-heading">── SUBJECTS (${subjects.length}) ──────────────</div>
 
                 ${subjects.length === 0 ? `
@@ -80,9 +83,15 @@ function renderDashboard(state) {
                     <div class="empty-state-text">NO SUBJECTS ADDED YET.<br />HIT + TO GET STARTED.</div>
                 </div>` : subjects.map(renderSubjectCard).join('')}
 
+                <!-- Place button in content flow -->
                 <div class="fab-wrap">
                     <button id="add-subject-btn" class="px-btn px-btn-primary">+ ADD SUBJECT</button>
                 </div>
+
+                <footer class="app-footer">
+                    <div class="footer-left">© ${currentYear} BUNKSAFE</div>
+                    <div class="footer-right">DEVELOPED BY ABHIJIT SMIJU KUNNEL</div>
+                </footer>
             </div>
         </div>
     `;
