@@ -254,6 +254,17 @@ input:focus{ outline:none; }
     align-items: center;
 }
 
+.footer-link {
+    color: var(--yellow);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
 @media (min-width: 768px) {
   .dashboard-wrap {
     padding: 20px;

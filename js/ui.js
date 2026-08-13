@@ -23,7 +23,9 @@ function renderOnboarding() {
                 <div id="start-hint" class="hint-text">ENTER NAME TO CONTINUE<br></div>
                 
                 <div class="divider-dashed"></div>
-                <div class="developer-tag"><br>DEVELOPED BY ABHIJIT SMIJU KUNNEL</div>
+                <div class="developer-tag">
+    <br>DEVELOPED BY <a href="https://github.com/ask-io" target="_blank" rel="noopener noreferrer" class="footer-link">ABHIJIT SMIJU KUNNEL</a>
+</div>
             </div>
         </div>
     `;
@@ -74,7 +76,6 @@ function renderDashboard(state) {
                     </div>
                 </div>` : ''}
 
-                // Inside renderDashboard(state)
                 <div class="subjects-heading">── SUBJECTS (${subjects.length}) ──────────────</div>
 
                 ${subjects.length === 0 ? `
@@ -90,7 +91,9 @@ function renderDashboard(state) {
 
                 <footer class="app-footer">
                     <div class="footer-left">© ${currentYear} BUNKSAFE</div>
-                    <div class="footer-right">DEVELOPED BY ABHIJIT SMIJU KUNNEL</div>
+                    <div class="footer-right">
+                        DEVELOPED BY <a href="https://github.com/ask-io" target="_blank" rel="noopener noreferrer" class="footer-link">ABHIJIT SMIJU KUNNEL</a>
+                    </div>
                 </footer>
             </div>
         </div>
