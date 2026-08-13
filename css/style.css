@@ -453,3 +453,90 @@ input:focus{ outline:none; }
     .card-stats{ grid-template-columns:repeat(2,1fr); }
     .field-row-3{ grid-template-columns:1fr; }
 }
+
+/* -- Install CTA (header) -- */
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.px-btn-ghost.px-btn-small#install-header-btn{
+    box-shadow:2px 2px 0 #000;
+}
+
+/* -- Install fallback banner (iOS / non-native-prompt browsers) -- */
+.install-banner { 
+  position: fixed; 
+  left: 50%; 
+  top: 50%; /* Changed from bottom: 0 to bring it to middle (was hiding add subject button) */ 
+  transform: translate(-50%, -50%); 
+  width: 100%; 
+  max-width: 480px; 
+  z-index: 40; 
+  background: var(--surface); 
+  border: var(--border-w) solid var(--yellow); 
+  box-shadow: 6px 6px 0 #000; 
+  padding: 16px 18px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 14px; 
+}
+
+.install-banner-text{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:0;
+}
+
+.install-banner-text strong{
+    font-family:'Press Start 2P', monospace;
+    font-size:10px;
+    color:var(--yellow);
+    letter-spacing:1px;
+}
+
+.install-banner-text span{
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:.5px;
+}
+
+.install-banner-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+}
+
+.install-banner-actions .px-btn-small{
+    width:auto;
+}
+
+.install-banner-close{
+    background:transparent;
+    border:2px solid var(--muted);
+    color:var(--muted);
+    width:28px;
+    height:28px;
+    line-height:1;
+    cursor:pointer;
+    font-size:12px;
+}
+
+.install-banner-close:active{
+    transform:translate(1px,1px);
+}
+
+@media(max-width:480px){
+    .install-banner{
+        flex-direction:column;
+        align-items:stretch;
+        text-align:center;
+    }
+    .install-banner-actions{
+        justify-content:center;
+    }
+}

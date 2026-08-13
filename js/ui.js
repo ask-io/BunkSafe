@@ -51,7 +51,10 @@ function renderDashboard(state) {
             <div class="dashboard-inner">
                 <header class="app-header">
                     <div class="app-logo">BUNKSAFE</div>
-                    <div class="greeting">HI, ${escapeHtml(state.studentName.toUpperCase())}</div>
+                    <div class="header-right">
+                        <button id="install-header-btn" class="px-btn-small px-btn-ghost hidden" type="button">⭳ INSTALL</button>
+                        <div class="greeting">HI, ${escapeHtml(state.studentName.toUpperCase())}</div>
+                    </div>
                 </header>
 
                 ${subjects.length > 0 ? `
