@@ -15,13 +15,15 @@ function renderOnboarding() {
                 <div class="divider-dashed"></div>
 
                 <div class="field-group">
-                    <label class="field-label">► PLAYER NAME</label>
+                    <label class="field-label">► CALLSIGN</label>
                     <input id="name-input" class="px-input" placeholder="ENTER NAME..." autocomplete="off" />
                 </div>
 
                 <button id="start-btn" class="px-btn px-btn-primary" disabled>START &gt;&gt;</button>
-                <div id="start-hint" class="hint-text">ENTER NAME TO CONTINUE</div>
-                <div class="footer-hint">CLICK ANYWHERE TO INTERACT</div>
+                <div id="start-hint" class="hint-text">ENTER NAME TO CONTINUE<br></div>
+                
+                <div class="divider-dashed"></div>
+                <div class="developer-tag"><br>DEVELOPED BY ABHIJIT SMIJU KUNNEL</div>
             </div>
         </div>
     `;

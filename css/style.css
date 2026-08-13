@@ -143,7 +143,14 @@ input:focus{ outline:none; }
     width:100%;
     max-width:400px;
 }
-
+.developer-tag{
+    text-align:center;
+    font-size:9px;
+    color:#555;
+    letter-spacing:3px;
+    margin-bottom:20px;
+    font-family:'Press Start 2P', monospace;
+}
 .version-tag{
     text-align:center;
     font-size:9px;
