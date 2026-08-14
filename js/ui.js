@@ -116,6 +116,7 @@ function renderSubjectCard(subject) {
                 <div class="card-name">${escapeHtml(subject.name.toUpperCase())}</div>
                 <div class="card-top-right">
                     <span class="status-badge status-${status}">${label}</span>
+                    <button class="px-btn px-btn-ghost px-btn-small edit-btn" data-id="${subject.id}">✎</button>
                     <button class="px-btn px-btn-danger px-btn-small remove-btn" data-id="${subject.id}">✕</button>
                 </div>
             </div>
@@ -142,6 +143,8 @@ function renderSubjectCard(subject) {
 function openAddSubjectModal() {
     const modal = document.getElementById('add-subject-modal');
     modal.classList.remove('hidden');
+    modal.dataset.mode = 'add';
+    delete modal.dataset.editId;
     modal.innerHTML = `
         <div class="modal-overlay" id="modal-overlay">
             <div class="modal-panel">
@@ -179,10 +182,55 @@ function openAddSubjectModal() {
     document.getElementById('modal-name').focus();
 }
 
+function openEditSubjectModal(subject) {
+    const modal = document.getElementById('add-subject-modal');
+    modal.classList.remove('hidden');
+    modal.dataset.mode = 'edit';
+    modal.dataset.editId = subject.id;
+
+    modal.innerHTML = `
+        <div class="modal-overlay" id="modal-overlay">
+            <div class="modal-panel">
+                <div class="modal-header">
+                    <div class="modal-title">[ EDIT SUBJECT ]</div>
+                    <button class="px-btn px-btn-danger px-btn-small" id="modal-close">✕</button>
+                </div>
+
+                <div id="modal-error" class="error-box hidden"></div>
+
+                <div class="field-group">
+                    <label class="field-label small">SUBJECT NAME</label>
+                    <input id="modal-name" class="px-input" placeholder="E.G. DATA STRUCTURES" autocomplete="off" value="${escapeHtml(subject.name)}" />
+                </div>
+
+                <div class="field-row-3">
+                    <div>
+                        <label class="field-label small">ATTENDED</label>
+                        <input id="modal-attended" class="px-input" type="number" placeholder="0" value="${subject.attended}" />
+                    </div>
+                    <div>
+                        <label class="field-label small">TOTAL</label>
+                        <input id="modal-total" class="px-input" type="number" placeholder="0" value="${subject.total}" />
+                    </div>
+                    <div>
+                        <label class="field-label small">TARGET %</label>
+                        <input id="modal-target" class="px-input" type="number" placeholder="75" value="${subject.target}" />
+                    </div>
+                </div>
+
+                <button id="modal-submit" class="px-btn px-btn-primary">✓ SAVE CHANGES</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('modal-name').focus();
+}
+
 function closeAddSubjectModal() {
     const modal = document.getElementById('add-subject-modal');
     modal.classList.add('hidden');
     modal.innerHTML = '';
+    delete modal.dataset.mode;
+    delete modal.dataset.editId;
 }
 
 function showModalError(message) {

@@ -38,13 +38,24 @@ function handleMark(id, type) {
     goToDashboard();
 }
 
+function handleEditSubject(id, updates) {
+    state.subjects = state.subjects.map(s =>
+        s.id === id ? { ...s, ...updates } : s
+    );
+    persist();
+    goToDashboard();
+}
+
 function handleRemove(id) {
     state.subjects = state.subjects.filter(s => s.id !== id);
     persist();
     goToDashboard();
 }
 
-function submitAddSubjectForm() {
+function submitSubjectForm() {
+    const modal = document.getElementById('add-subject-modal');
+    const mode = modal.dataset.mode || 'add';
+
     const name = document.getElementById('modal-name').value;
     const attended = parseInt(document.getElementById('modal-attended').value) || 0;
     const total = parseInt(document.getElementById('modal-total').value) || 0;
@@ -60,8 +71,16 @@ function submitAddSubjectForm() {
         return;
     }
 
+    const payload = { name: name.trim(), attended, total, target };
+    const editId = modal.dataset.editId;
+
     closeAddSubjectModal();
-    handleAddSubject({ name: name.trim(), attended, total, target });
+
+    if (mode === 'edit' && editId) {
+        handleEditSubject(editId, payload);
+    } else {
+        handleAddSubject(payload);
+    }
 }
 
 // ── Event delegation: one listener per container, since content re-renders ──
@@ -109,6 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
             handleMark(markBtn.dataset.id, markBtn.dataset.type);
             return;
         }
+        const editBtn = e.target.closest('.edit-btn');
+        if (editBtn) {
+            const subject = state.subjects.find(s => s.id === editBtn.dataset.id);
+            if (subject) openEditSubjectModal(subject);
+            return;
+        }
         const removeBtn = e.target.closest('.remove-btn');
         if (removeBtn) {
             handleRemove(removeBtn.dataset.id);
@@ -122,13 +147,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (e.target.id === 'modal-submit') {
-            submitAddSubjectForm();
+            submitSubjectForm();
         }
     });
 
     document.getElementById('add-subject-modal').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && e.target.id === 'modal-name') {
-            submitAddSubjectForm();
+            submitSubjectForm();
         }
     });
 });

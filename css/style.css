@@ -393,6 +393,10 @@ input:focus{ outline:none; }
     flex-shrink:0;
 }
 
+.edit-btn{
+    box-shadow:2px 2px 0 #000;
+}
+
 .status-badge{ font-size:10px; }
 .status-badge.status-safe{ color:var(--green); }
 .status-badge.status-warning{ color:var(--warn); }
