@@ -254,15 +254,22 @@ input:focus{ outline:none; }
     align-items: center;
 }
 
+.footer-left,
+.footer-right {
+    font-size: 9px;
+    color: #555;
+    letter-spacing: 0.5px;
+}
+
 .footer-link {
-    color: var(--yellow);
+    color: #777;
     text-decoration: none;
-    transition: opacity 0.15s ease;
+    transition: color 0.15s ease;
 }
 
 .footer-link:hover {
+    color: var(--yellow);
     text-decoration: underline;
-    opacity: 0.8;
 }
 
 @media (min-width: 768px) {
